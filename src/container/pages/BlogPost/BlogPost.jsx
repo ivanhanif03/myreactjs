@@ -8,6 +8,7 @@ import Post from '../../../component/Post/Post'
 
 //Styling
 import './BlogPost.css';
+import API from '../../../services';
 
 
 class BlogPost extends Component {
@@ -19,30 +20,39 @@ class BlogPost extends Component {
             body: '',
             userId: 1 
         },
-        isUpdate: false
+        isUpdate: false,
+        comment: []
     }
 
     getPostAPI = () => {
-        Axios.get('http://localhost:3004/posts?_sort=id&_order=desc')
-        .then((result) => {
+        API.getNewsBlog().then(result => {
             this.setState({
-                post: result.data
+                post: result
+            })
+        })
+        API.getComment().then(result => {
+            this.setState({
+                comment: result
             })
         })
     }
 
     postDataToAPI = () => {
-        Axios.post('http://localhost:3004/posts', this.state.formBlogPost).then((res) => {
-            console.log(res);
+        API.postNewsBlog(this.state.formBlogPost).then(result => {
             this.getPostAPI();
-        }, (err) => {
-            console.log('error: ', err);
+            this.setState({
+                formBlogPost: {
+                    id:1,
+                    title: '',
+                    body: '',
+                    userId: 1
+                }
+            })
         })
     }
 
     putDataToAPI = () => {
-        Axios.put(`http://localhost:3004/posts/${this.state.formBlogPost.id}`, this.state.formBlogPost).then((res)=>{
-            console.log(res);
+        API.updateNewsBlog(this.state.formBlogPost, this.state.formBlogPost.id). then(result => {
             this.getPostAPI();
             this.setState({
                 isUpdate: false,
@@ -57,7 +67,7 @@ class BlogPost extends Component {
     }
 
     handleRemove = (data) => {
-        Axios.delete(`http://localhost:3004/posts/${data}`).then((res)=>{
+        API.deleteNewsBlog(data).then(result => {
             this.getPostAPI();
         })
     }
@@ -120,6 +130,11 @@ class BlogPost extends Component {
                     <textarea value={this.state.formBlogPost.body} name="body" id="body" cols="30" rows="10" placeholder="add content" onChange={this.handleFormChange}></textarea>
                     <button className="btn-submit" onClick={this.handleSubmit}>Simpan</button>
                 </div>
+                {/* {
+                    this.state.comment.map(comment => {
+                        return <p>{comment.name} - {comment.email}</p>
+                    })
+                } */}
                 {
                     this.state.post.map(post => {
                         return <Post key={post.id} data={post} remove={this.handleRemove} update={this.handleUpdate} goDetail={this.handleDetail}/>

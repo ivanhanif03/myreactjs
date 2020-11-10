@@ -10,6 +10,7 @@ import LifeCycleComp from '../pages/LifeCycleComp/LifeCycleComp';
 import Product from '../pages/Product/Product';
 import YoutubeCompPage from '../pages/YoutubeCompPage/YoutubeCompPage';
 import GlobalProvider from '../../context/context';
+import Hooks from '../pages/Hooks/Hooks';
 
 //Styling
 import './Home.css';
@@ -24,6 +25,7 @@ class Home extends Component {
                         <Link to="/product">Product</Link>
                         <Link to="/lifecycle">LifeCycle</Link>
                         <Link to="/youtube-component">Youtube</Link>
+                        <Link to="/hooks">Hooks</Link>
                     </div>
                     <Switch>
                         <Route path="/youtube-component">
@@ -39,6 +41,7 @@ class Home extends Component {
                             <BlogPost />
                         </Route>
                         <Route path="/detail-post/:postID" component={DetailPost} />
+                        <Route path="/hooks" component={Hooks} />
                     </Switch>
                 </Fragment>
             </Router>
